@@ -165,6 +165,11 @@ describe('<webview> tag', function () {
     await BrowserWindow.addDevToolsExtension(extensionPath);
 
     w.loadFile(path.join(__dirname, 'fixtures', 'pages', 'webview-devtools.html'));
+    w.webContents.on('did-finish-load', () => {
+      w.webContents.executeJavaScript(`
+        document.querySelector('webview').setAttribute('src', 'file://${fixtures}/pages/base-page.html');
+      `);
+    });
     let childWebContentsId = 0;
     app.once('web-contents-created', (e, webContents) => {
       childWebContentsId = webContents.id;
